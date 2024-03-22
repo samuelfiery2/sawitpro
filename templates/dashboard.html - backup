@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 50%;
+            margin: 50px auto;
+        }
+        .welcome-message {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .logout-link {
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .logout-link:hover {
+            color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="file"] {
+            margin-top: 5px;
+            display: block; /* Ensure the file input spans the full width */
+        }
+        .btn-upload {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-upload:hover {
+            background-color: #218838;
+        }
+        .error-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Dashboard</h2>
+        <p class="welcome-message">Hello, {{ current_user.username }}!</p>
+        <p><a href="{{ url_for('logout') }}" class="logout-link">Logout</a></p>
+
+        <h3>Upload an Image</h3>
+        <form action="{{ url_for('dashboard') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="image">Select an image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn-upload">Upload</button>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

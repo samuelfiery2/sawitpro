@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+        }
+        .image-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .image-table th,
+        .image-table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        .image-table img {
+            max-width: 300px;
+            max-height: 300px;
+        }
+        .no-image-message {
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Dashboard</h2>
+        <p>Hello, {{ current_user.username }}!</p>
+        <p><a href="{{ url_for('logout') }}">Logout</a></p>
+
+        <h3>Upload Images</h3>
+        <form action="{{ url_for('dashboard') }}" method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" multiple required>
+            <button type="submit">Upload</button>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <h3>Uploaded Images</h3>
+        {% if user_images %}
+            <table class="image-table">
+                <thead>
+                    <tr>
+                        <th>Album foto</th>
+                        <th>File Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for image in user_images %}
+                        <tr>
+                            <td><img src="{{ url_for('static', filename=image.image_path) }}" alt="Image"></td>
+                            <td class="file-name">{{ image.image_path }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-image-message">No images uploaded yet.</p>
+        {% endif %}
+        
+    </div>
+</body>
+</html>
